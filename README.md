@@ -1,4 +1,5 @@
 steamscraper
 ============
+Scrapes basic game info from the Steam search pages and outputs to a JSON file.
 
-Scrapes basic game info from the Steam search pages
+The unicode encoding still needs some work, as some characters (e.g. ":", "'", "™") are not displaying in the JSON file. 
