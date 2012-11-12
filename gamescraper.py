@@ -51,20 +51,3 @@ class GamePageScraper(HTMLParser):
 				self.gameInfo['score'] = data.strip()
 	def getGameInfo(self):
 		return self.gameInfo
-
-# parses a Steam search page for a specific string into a dictionary
-class SteamSearchParser(HTMLParser):
-	def __init__(self):
-		HTMLParser.__init__(self)
-		self.foundGame = False
-	def handle_starttag(self, tag, attrs):
-		if tag == 'span':
-			if len(attrs) > 0 and attrs[0][0] == 'itemprop' and attrs[0][1] == 'name':
-				self.foundName = True
-		elif tag == 'div':
-			if len(attrs) > 0  and attrs[0][0] == 'class' and attrs[0][1] == 'game_description_snippet':
-				self.foundDescription = True
-			elif len(attrs) > 1 and attrs[1][0] == 'itemprop' and attrs[1][1] == 'price':
-				self.foundPrice = True
-			elif len(attrs) > 0 and attrs[0][0] == 'id' and attrs[0][1] == 'game_area_metascore':
-				self.foundScore = True
