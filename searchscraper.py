@@ -30,6 +30,7 @@ class SearchPageScraper(HTMLParser):
 				if 'app' in url:
 					self.currEntry = {}
 					self.currEntry['url'] = attrs[0][1]
+					self.currEntry['appid'] = int(attrs[0][1][attrs[0][1].index('app/') + len('app/'):attrs[0][1].index('/?')])
 					self.entryStart = True
 		if self.entryStart:
 			if tag == 'img' and len(attrs) > 1:
@@ -40,6 +41,19 @@ class SearchPageScraper(HTMLParser):
 						self.entryStart = False
 					else:
 						self.currEntry['image'] = image
+				elif attrs[0][0] == 'class' and attrs[0][1] == 'platform_img':
+					if 'platforms' not in self.currEntry:
+						self.currEntry['platforms'] = []
+					platform = attrs[1][1][attrs[1][1].index('platform_') + len('platform_'):attrs[1][1].index('.png')]
+					if platform == 'steamplay_only':
+						platform = 'Steamplay'
+					elif platform == 'win':
+						platform = 'Windows'
+					elif platform == 'mac':
+						platform = 'Mac'
+					elif platform == 'linux':
+						platform = 'Linux'
+					self.currEntry['platforms'].append(platform)
 			elif tag == 'h4':
 				self.foundName = True
 			elif tag == 'div':
@@ -76,7 +90,7 @@ class SearchPageScraper(HTMLParser):
 		if self.foundPrice:
 			self.currEntry['price'] = data.strip()
 		if self.foundScore:
-			self.currEntry['score'] = data.strip()
+			self.currEntry['score'] = int(data.strip())
 		if self.foundReleased:
 			self.currEntry['released'] = data.strip()
 		

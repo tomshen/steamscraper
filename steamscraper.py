@@ -1,5 +1,6 @@
 import json
 import urllib2
+import datetime
 from searchscraper import scrapeSearchPage
 
 class SteamScraper():
@@ -19,11 +20,11 @@ class SteamScraper():
 		return numPages
 
 	def outputJSON(self):
-		JSONoutput = ""
-		for entry in self.entries:
-			JSONoutput += json.dumps(entry) + '\n'
-		JSONoutput = JSONoutput.replace('\",', '\",\n\t').strip().encode('utf-8')
-		open("steamdata.json", "w").write(JSONoutput)
+		output = {}
+		output['last_updated'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+		output['game_count'] = len(self.entries)
+		output['games'] = self.entries
+		output = json.dumps(output, indent=4).encode('utf-8')
+		open("steamdata.json", "w").write(output)
 
-scraper = SteamScraper()
-scraper.outputJSON()
+SteamScraper().outputJSON()
